@@ -4,7 +4,7 @@ JsCore is an android library for running javascript inside java. It's main purpo
 ```java
 public Class UnderscoreJs extends JsObject {
   // default constructor
-  UnderscoreJS() { }
+  UnderscoreJs() { }
   
   public int min(ArrayList<Integer> list) {
     // returns the value of the product of _.min 
