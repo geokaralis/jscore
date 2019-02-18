@@ -1,6 +1,10 @@
-package jscore
+package jscore.android
 
 class JSContext {
+
+    fun evaluated(src: String): Boolean {
+        return false
+    }
 
     external fun evaluateScript(script: String): String
 

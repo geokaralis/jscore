@@ -6,7 +6,7 @@
 #include <string>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_jscore_JSContext_evaluateScript(
+Java_jscore_android_JSContext_evaluateScript(
         JNIEnv *env,
         jobject /* this */,
         jstring string) {
