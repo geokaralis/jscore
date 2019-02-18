@@ -1,15 +1,15 @@
-# jscore
+# JSCore
 
-JsCore is an android library for running javascript inside java. It's main purpose is for code sharing between web and mobile. In it's core it uses google's v8 javascript runtime library. One main characteristic of JsCore is the concept of javascript bindings within java/kotlin, making the js library feel more like a native one.
+JSCore is an android library for running javascript inside java. It's main purpose is for code sharing between web and mobile. In it's core it uses google's v8 javascript runtime library. One main characteristic of JSCore is the concept of javascript bindings within java/kotlin, making the js library feel more like a native one.
 ```java
-public Class UnderscoreJs extends JsObject {
+public Class UnderscoreJs extends JSObject {
   // default constructor
   UnderscoreJs() { }
   
   public int min(ArrayList<Integer> list) {
     // returns the value of the product of _.min 
     // function from underscore.js, as an integer
-    return JsObject().bind.method("_.min", list);
+    return JsObject().bind().method("min", list);
   }
 }
 ```
@@ -24,9 +24,34 @@ UnderscoreJs _ = new UnderscoreJs();
 
 int min = _.min(numbers); // 6
 ```
-JsCore also evaluates scripts as per the usual way.
+```kotlin
+class Underscore(private val src: String): JSObject() {
+
+    /**
+     * Checks if a value is present in a list
+     *
+     * @param list   ArrayList holding integer values
+     * @param index  Value to check in the list
+     *
+     * @return       true if the value is present in the list, otherwise false
+     */
+    fun contains(list: ArrayList<Int>, index: Int): Boolean {
+        return JSObject().bind(src).function("contains", arrayListOf(list, index))
+    }
+}
+```
+```kotlin
+val list: ArrayList<Int> = ArrayList()
+list.add(1)
+list.add(2)
+list.add(3)
+
+val underscore = Underscore(src)
+val contains = underscore.contains(list, 3)
+```
+JSCore also evaluates scripts as per the usual way.
 ```java
-JsContext ctx = new JsContext(); // Javascript VM context
+JSContext ctx = new JSContext(); // Javascript VM context
 
 String greeting = (String) ctx.evaluate(""
   + "var message = 'hello world!'"
@@ -37,7 +62,10 @@ Log.d("Greeting", greeting); // HELLO WORLD!
 
 ## v8
 
-JsCore focuses mainly on developer ease of use, but that means that performance must not sacrifised as well. That's why v8 is used as a very fast and modern javascript run time environment. At build all the necessary prunings and optimizations take in effect to reduce v8's footprint as low as possible. The library is provided as a fat library containing all the build variants of v8 for different platforms, but with multiple apks techniques it can be reduced further down for each platform.
+JsCore focuses mainly on developer ease of use, but that means that performance must not sacrifised as well. That's why v8 is used as a very fast and modern javascript run time environment.
+
+## Kotlin
+As a more modern and developer friendly framework JSCore is written entirely in Kotlin, a modern, fast, safe programming language, with great Java fallback.
 
 ## Contributing
 
