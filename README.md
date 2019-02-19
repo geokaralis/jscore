@@ -62,10 +62,10 @@ Log.d("Greeting", greeting); // HELLO WORLD!
 
 ## v8
 
-JsCore focuses mainly on developer ease of use, but that means that performance must not sacrifised as well. That's why v8 is used as a very fast and modern javascript run time environment.
+v8 is used as JSCore's javascript runtime environment.
 
 ## Kotlin
-As a more modern and developer friendly framework JSCore is written entirely in Kotlin, a modern, fast, safe programming language, with great Java fallback.
+JSCore is written entirely in Kotlin.
 
 ## Contributing
 
