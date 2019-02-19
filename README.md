@@ -1,4 +1,7 @@
 # JSCore
+<p align="center">
+  <img src="/docs/jscore_icon_256.png" width="128" alt="JSCore Logo"/>
+ </p>
 
 JSCore is an android library for running javascript inside java. It's main purpose is for code sharing between web and mobile. In it's core it uses google's v8 javascript runtime library. One main characteristic of JSCore is the concept of javascript bindings within java/kotlin, making the js library feel more like a native one.
 ```java
