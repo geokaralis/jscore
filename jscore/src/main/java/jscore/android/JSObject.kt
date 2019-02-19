@@ -1,6 +1,7 @@
 package jscore.android
 
 import android.util.Log
+import kotlin.text.StringBuilder
 
 open class JSObject {
     private val tag : String = "JSObject"
@@ -22,31 +23,48 @@ open class JSObject {
             return this
         }
         ctx?.evaluateScript(src)
-        Log.d(tag, "Evaluating " + ctx?.evaluateScript(src))
+        //Log.d(tag, "Evaluating " + ctx?.evaluateScript(src))
 
         return this
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> function(name: String, params: ArrayList<out Any>) : T {
-        val script: String = "function contains() { };"
+        val method = "var a = function $name"
 
-        ctx!!.evaluateScript(script)
+        val paramsBuilder = StringBuilder()
+        var methodParams: String? = null
+        var param: String?
+        val size: Int? = params.size
 
-//
-//
-//        params.forEach {
-//            Log.d(tag, it.toString())
-//        }
+        params.forEachIndexed { index, el ->
+            param = "$el"
+            if (el is String) param = "'$el'"
+            if (el is ArrayList<*>) {
+                param = param?.replace("[,| ]".toRegex(), "")
 
-        var list: ArrayList<Int> = params[0] as ArrayList<Int>
-        var index = params[1]
+                param = param!!.replace("([a-zA-Z._^%\$#!~@,-]+)".toRegex(), "'\$1',")
 
+                param = param!!.replace("(\\d(?=\\d{1}))".toRegex(), "\$1, ")
+            }
 
-//        for (item: Int in list) {
-//            Log.d(tag, item.toString())
-//        }
+            param = "$param, "
 
-//        Log.d(tag, list.toString() + index)
+            if (index == size!! - 1)
+            {
+                param = param!!.replace(
+                    "[,| ]".toRegex(),
+                    ""
+                )
+            }
+
+            methodParams = paramsBuilder.append(param).toString()
+        }
+
+        Log.d(tag, "$method($methodParams)")
+
+        val list: ArrayList<*> = params[0] as ArrayList<*>
+        val index = params[1]
 
         val bool: Boolean? = list.contains(index)
 

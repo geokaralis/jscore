@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val underscore = Underscore(src)
-        val contains = underscore.contains(list, 3)
+        val contains = underscore.contains(list,4)
 
         Log.d("Main", contains.toString())
 
