@@ -1,32 +1,10 @@
 # JSCore
 <p align="center">
   <img src="/docs/jscore_icon_256.png" width="128" alt="JSCore Logo"/>
- </p>
-
+</p>
 JSCore is an android library for running javascript inside java. It's main purpose is for code sharing between web and mobile. In it's core it uses google's v8 javascript runtime library. One main characteristic of JSCore is the concept of javascript bindings within java/kotlin, making the js library feel more like a native one.
-```java
-public Class UnderscoreJs extends JSObject {
-  // default constructor
-  UnderscoreJs() { }
-  
-  public int min(ArrayList<Integer> list) {
-    // returns the value of the product of _.min 
-    // function from underscore.js, as an integer
-    return JsObject().bind().method("min", list);
-  }
-}
-```
-```java
-ArrayList<Integer> numbers = new ArrayList<Integer>();
-numbers.add(27);
-numbers.add(9);
-numbers.add(18);
-numbers.add(6);
 
-UnderscoreJs _ = new UnderscoreJs();
-
-int min = _.min(numbers); // 6
-```
+## Usage
 ```kotlin
 class Underscore(private val src: String): JSObject() {
 
@@ -50,7 +28,7 @@ list.add(2)
 list.add(3)
 
 val underscore = Underscore(src)
-val contains = underscore.contains(list, 3)
+val contains = underscore.contains(list, 3) // true
 ```
 JSCore also evaluates scripts as per the usual way.
 ```java
@@ -72,4 +50,19 @@ JSCore is written entirely in Kotlin.
 
 ## Contributing
 
-JsCore is still at the early alpha stages of architecting and c++ support through ndk. If you 'd like to contribute to this project feel free to pull request and provide ideas through issues.
+JSCore is still at the early alpha stages of architecting and c++ support through ndk. If you 'd like to contribute to this project feel free to pull request and provide ideas through issues.
+
+## License
+   Copyright (c) 2019, George Karalis.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
