@@ -18,11 +18,11 @@ Java_jscore_android_JSContext_initV8(
         JNIEnv *env,
         jobject /* this */) {
 
-//    // Initialize V8.
-   v8::V8::InitializeICU();
-//    platform = v8::platform::NewDefaultPlatform();
-//    v8::V8::InitializePlatform(&(*platform.get()));
-//    v8::V8::Initialize();
+    // Initialize V8.
+    v8::V8::InitializeICU();
+    platform = v8::platform::NewDefaultPlatform();
+    v8::V8::InitializePlatform(&(*platform.get()));
+    v8::V8::Initialize();
 //
 //    // Create a new Isolate and make it the current one.
 //    v8::Isolate::CreateParams create_params;
@@ -45,8 +45,8 @@ Java_jscore_android_JSContext_initV8(
 //        JNIEnv *env,
 //        jobject /* this */,
 //        jstring string) {
-////    std::string script = env->GetStringUTFChars(string, nullptr);
-////    return env->NewStringUTF(script.c_str());
+//    std::string script = env->GetStringUTFChars(string, nullptr);
+//    return env->NewStringUTF(script.c_str());
 //    std::string hello = "Hello v8 from C++!\n";
 //
 //    v8::Isolate::Scope isolate_scope(isolate);
