@@ -11,7 +11,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++0x"
+            }
+        }
 
+        ndk {
+            abiFilters "x86"
+        }
     }
     buildTypes {
         release {
@@ -26,6 +34,7 @@ android {
         }
     }
     productFlavors {
+
     }
 }
 

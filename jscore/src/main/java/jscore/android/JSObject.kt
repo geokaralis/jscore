@@ -1,6 +1,8 @@
 package jscore.android
 
 import android.util.Log
+import jscore.android.parse.ArrayListParse
+import jscore.android.parse.Parser
 import kotlin.text.StringBuilder
 
 open class JSObject {
@@ -10,6 +12,8 @@ open class JSObject {
     init {
         Log.d(tag, "Initializing context virtual machine...")
         this.ctx = JSContext()
+
+        //ctx?.initV8()
     }
 
 
@@ -22,7 +26,7 @@ open class JSObject {
         if (ctx?.evaluated(src)!!) {
             return this
         }
-        ctx?.evaluateScript(src)
+        //ctx?.evaluateScript(src)
         //Log.d(tag, "Evaluating " + ctx?.evaluateScript(src))
 
         return this
@@ -30,38 +34,20 @@ open class JSObject {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> function(name: String, params: ArrayList<out Any>) : T {
-        val method = "var a = function $name"
 
-        val paramsBuilder = StringBuilder()
-        var methodParams: String? = null
-        var param: String?
-        val size: Int? = params.size
+        val id = randomId()
 
-        params.forEachIndexed { index, el ->
-            param = "$el"
-            if (el is String) param = "'$el'"
-            if (el is ArrayList<*>) {
-                param = param?.replace("[,| ]".toRegex(), "")
+        var functionTemplate = "var $id = $name"
 
-                param = param!!.replace("([a-zA-Z._^%\$#!~@,-]+)".toRegex(), "'\$1',")
+        val parser = Parser()
+        var jsParams = parser.parse(params)
 
-                param = param!!.replace("(\\d(?=\\d{1}))".toRegex(), "\$1, ")
-            }
+        functionTemplate = "$functionTemplate($jsParams)"
 
-            param = "$param, "
 
-            if (index == size!! - 1)
-            {
-                param = param!!.replace(
-                    "[,| ]".toRegex(),
-                    ""
-                )
-            }
+        //Log.d(tag, ctx?.evaluateScript(functionTemplate))
+        //Log.d(tag, ctx?.evaluateScript(id))
 
-            methodParams = paramsBuilder.append(param).toString()
-        }
-
-        Log.d(tag, "$method($methodParams)")
 
         val list: ArrayList<*> = params[0] as ArrayList<*>
         val index = params[1]
@@ -69,5 +55,16 @@ open class JSObject {
         val bool: Boolean? = list.contains(index)
 
         return bool as T
+    }
+
+    private fun randomId(): String {
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+
+        val randomId = (1..6)
+            .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map(charPool::get)
+            .joinToString("")
+
+        return randomId
     }
 }

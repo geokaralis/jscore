@@ -13,6 +13,6 @@ class Underscore(private val src: String): JSObject() {
      * @return       true if the value is present in the list, otherwise false
      */
     fun contains(list: ArrayList<Int>, index: Int): Boolean {
-        return JSObject().bind(src).function("contains", arrayListOf(list, index))
+        return JSObject().bind(src).function("_.contains", arrayListOf(list, index))
     }
 }

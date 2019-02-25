@@ -10,28 +10,29 @@ import jscore.android.JSObject
 
 class MainActivity : AppCompatActivity() {
 
-    private val context = JSContext()
+    private val ctx = JSContext()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val list: ArrayList<Int> = ArrayList()
-        list.add(1)
-        list.add(2)
-        list.add(3)
-
-        val fileName = "underscore-min.js"
-        val src = application.assets.open(fileName).bufferedReader().use{
-            it.readText()
-        }
-
-        val underscore = Underscore(src)
-        val contains = underscore.contains(list,4)
-
-        Log.d("Main", contains.toString())
-
-        // Example of a call to a native method
-        sample_text.text = context.evaluateScript("var num = 5; return num;")
+//        val list: ArrayList<Int> = ArrayList()
+////        list.add(1)
+////        list.add(2)
+////        list.add(3)
+////
+////        val fileName = "underscore-min.js"
+////        val src = application.assets.open(fileName).bufferedReader().use{
+////            it.readText()
+////        }
+////
+////        val underscore = Underscore(src)
+////        val contains = underscore.contains(list,3)
+////
+////        Log.d("Main", contains.toString())
+////
+////        // Example of a call to a native method
+////        sample_text.text = context.evaluateScript("var num = 5; return num;")
+        ctx.initV8()
     }
 }
