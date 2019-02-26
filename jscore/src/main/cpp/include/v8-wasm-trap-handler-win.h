@@ -7,8 +7,6 @@
 
 #include <windows.h>
 
-#include "v8config.h"  // NOLINT(build/include)
-
 namespace v8 {
 /**
  * This function determines whether a memory access violation has been an
@@ -22,7 +20,7 @@ namespace v8 {
  *
  * \param exception An EXCEPTION_POINTERS* as provided to the exception handler.
  */
-V8_EXPORT bool TryHandleWebAssemblyTrapWindows(EXCEPTION_POINTERS* exception);
+bool TryHandleWebAssemblyTrapWindows(EXCEPTION_POINTERS* exception);
 
 }  // namespace v8
 #endif  // V8_WASM_TRAP_HANDLER_WIN_H_

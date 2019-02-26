@@ -20,8 +20,6 @@ class Isolate;
 
 namespace internal {
 
-class Isolate;
-
 typedef uintptr_t Address;
 static const Address kNullAddress = 0;
 
@@ -88,14 +86,11 @@ struct SmiTagging<8> {
   }
 };
 
-#if defined(V8_COMPRESS_POINTERS)
+#if defined(V8_COMPRESS_POINTERS) || defined(V8_31BIT_SMIS_ON_64BIT_ARCH)
 static_assert(
     kApiSystemPointerSize == kApiInt64Size,
     "Pointer compression can be enabled only for 64-bit architectures");
-#endif
-
-#if defined(V8_COMPRESS_POINTERS) || defined(V8_31BIT_SMIS_ON_64BIT_ARCH)
-typedef SmiTagging<kApiIntSize> PlatformSmiTagging;
+typedef SmiTagging<4> PlatformSmiTagging;
 #else
 typedef SmiTagging<kApiSystemPointerSize> PlatformSmiTagging;
 #endif
@@ -128,9 +123,6 @@ class Internals {
   static const int kOddballKindOffset = 4 * kApiTaggedSize + kApiDoubleSize;
   static const int kForeignAddressOffset = kApiTaggedSize;
   static const int kJSObjectHeaderSize = 3 * kApiTaggedSize;
-  static const int kJSObjectHeaderSizeForEmbedderFields =
-      (kJSObjectHeaderSize + kApiSystemPointerSize - 1) &
-      -kApiSystemPointerSize;
   static const int kFixedArrayHeaderSize = 2 * kApiTaggedSize;
   static const int kEmbedderDataArrayHeaderSize = 2 * kApiTaggedSize;
   static const int kEmbedderDataSlotSize =
@@ -182,12 +174,6 @@ class Internals {
   static const int kUndefinedOddballKind = 5;
   static const int kNullOddballKind = 3;
 
-  // Constants used by PropertyCallbackInfo to check if we should throw when an
-  // error occurs.
-  static const int kThrowOnError = 0;
-  static const int kDontThrow = 1;
-  static const int kInferShouldThrowMode = 2;
-
   // Soft limit for AdjustAmountofExternalAllocatedMemory. Trigger an
   // incremental GC once the external memory reaches this limit.
   static constexpr int kExternalAllocationSoftLimit = 64 * 1024 * 1024;
@@ -217,12 +203,12 @@ class Internals {
 
   V8_INLINE static int GetInstanceType(const internal::Address obj) {
     typedef internal::Address A;
-    A map = ReadTaggedPointerField(obj, kHeapObjectMapOffset);
-    return ReadRawField<uint16_t>(map, kMapInstanceTypeOffset);
+    A map = ReadField<A>(obj, kHeapObjectMapOffset);
+    return ReadField<uint16_t>(map, kMapInstanceTypeOffset);
   }
 
   V8_INLINE static int GetOddballKind(const internal::Address obj) {
-    return SmiValue(ReadTaggedSignedField(obj, kOddballKindOffset));
+    return SmiValue(ReadField<internal::Address>(obj, kOddballKindOffset));
   }
 
   V8_INLINE static bool IsExternalTwoByteString(int instance_type) {
@@ -276,74 +262,24 @@ class Internals {
   }
 
   template <typename T>
-  V8_INLINE static T ReadRawField(internal::Address heap_object_ptr,
-                                  int offset) {
+  V8_INLINE static T ReadField(const internal::Address heap_object_ptr,
+                               int offset) {
     internal::Address addr = heap_object_ptr + offset - kHeapObjectTag;
     return *reinterpret_cast<const T*>(addr);
   }
 
-  V8_INLINE static internal::Address ReadTaggedPointerField(
-      internal::Address heap_object_ptr, int offset) {
-#ifdef V8_COMPRESS_POINTERS
-    int32_t value = ReadRawField<int32_t>(heap_object_ptr, offset);
-    internal::Address root = GetRootFromOnHeapAddress(heap_object_ptr);
-    return root + static_cast<internal::Address>(static_cast<intptr_t>(value));
-#else
-    return ReadRawField<internal::Address>(heap_object_ptr, offset);
-#endif
-  }
-
-  V8_INLINE static internal::Address ReadTaggedSignedField(
-      internal::Address heap_object_ptr, int offset) {
-#ifdef V8_COMPRESS_POINTERS
-    int32_t value = ReadRawField<int32_t>(heap_object_ptr, offset);
-    return static_cast<internal::Address>(static_cast<intptr_t>(value));
-#else
-    return ReadRawField<internal::Address>(heap_object_ptr, offset);
-#endif
-  }
-
-  V8_INLINE static internal::Address ReadTaggedAnyField(
-      internal::Address heap_object_ptr, int offset) {
-#ifdef V8_COMPRESS_POINTERS
-    int32_t value = ReadRawField<int32_t>(heap_object_ptr, offset);
-    internal::Address root_mask = static_cast<internal::Address>(
-        -static_cast<intptr_t>(value & kSmiTagMask));
-    internal::Address root_or_zero =
-        root_mask & GetRootFromOnHeapAddress(heap_object_ptr);
-    return root_or_zero +
-           static_cast<internal::Address>(static_cast<intptr_t>(value));
-#else
-    return ReadRawField<internal::Address>(heap_object_ptr, offset);
-#endif
-  }
-
-#ifdef V8_COMPRESS_POINTERS
-  static constexpr size_t kPtrComprHeapReservationSize = size_t{1} << 32;
-  static constexpr size_t kPtrComprIsolateRootBias =
-      kPtrComprHeapReservationSize / 2;
-  static constexpr size_t kPtrComprIsolateRootAlignment = size_t{1} << 32;
-
-  V8_INLINE static internal::Address GetRootFromOnHeapAddress(
-      internal::Address addr) {
-    return (addr + kPtrComprIsolateRootBias) &
-           -static_cast<intptr_t>(kPtrComprIsolateRootAlignment);
-  }
-
-#else
-
+#ifndef V8_COMPRESS_POINTERS
   template <typename T>
   V8_INLINE static T ReadEmbedderData(const v8::Context* context, int index) {
     typedef internal::Address A;
     typedef internal::Internals I;
     A ctx = *reinterpret_cast<const A*>(context);
-    A embedder_data =
-        I::ReadTaggedPointerField(ctx, I::kNativeContextEmbedderDataOffset);
+    A embedder_data = I::ReadField<A>(ctx, I::kNativeContextEmbedderDataOffset);
     int value_offset =
         I::kEmbedderDataArrayHeaderSize + (I::kEmbedderDataSlotSize * index);
-    return I::ReadRawField<T>(embedder_data, value_offset);
+    return I::ReadField<T>(embedder_data, value_offset);
   }
-#endif  // V8_COMPRESS_POINTERS
+#endif
 };
 
 // Only perform cast check for types derived from v8::Data since
@@ -368,15 +304,6 @@ template <class T>
 V8_INLINE void PerformCastCheck(T* data) {
   CastCheck<std::is_base_of<Data, T>::value>::Perform(data);
 }
-
-// {obj} must be the raw tagged pointer representation of a HeapObject
-// that's guaranteed to never be in ReadOnlySpace.
-V8_EXPORT internal::Isolate* IsolateFromNeverReadOnlySpaceObject(Address obj);
-
-// Returns if we need to throw when an error occurs. This infers the language
-// mode based on the current context and the closure. This returns true if the
-// language mode is strict.
-V8_EXPORT bool ShouldThrowOnError(v8::internal::Isolate* isolate);
 
 }  // namespace internal
 }  // namespace v8

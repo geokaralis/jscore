@@ -5,7 +5,6 @@
 #ifndef V8_LIBPLATFORM_V8_TRACING_H_
 #define V8_LIBPLATFORM_V8_TRACING_H_
 
-#include <atomic>
 #include <fstream>
 #include <memory>
 #include <unordered_set>
@@ -36,7 +35,7 @@ class V8_PLATFORM_EXPORT TraceObject {
     const char* as_string;
   };
 
-  TraceObject() = default;
+  TraceObject() {}
   ~TraceObject();
   void Initialize(
       char phase, const uint8_t* category_enabled_flag, const char* name,
@@ -107,14 +106,12 @@ class V8_PLATFORM_EXPORT TraceObject {
 
 class V8_PLATFORM_EXPORT TraceWriter {
  public:
-  TraceWriter() = default;
-  virtual ~TraceWriter() = default;
+  TraceWriter() {}
+  virtual ~TraceWriter() {}
   virtual void AppendTraceEvent(TraceObject* trace_event) = 0;
   virtual void Flush() = 0;
 
   static TraceWriter* CreateJSONTraceWriter(std::ostream& stream);
-  static TraceWriter* CreateJSONTraceWriter(std::ostream& stream,
-                                            const std::string& tag);
 
  private:
   // Disallow copy and assign
@@ -148,8 +145,8 @@ class V8_PLATFORM_EXPORT TraceBufferChunk {
 
 class V8_PLATFORM_EXPORT TraceBuffer {
  public:
-  TraceBuffer() = default;
-  virtual ~TraceBuffer() = default;
+  TraceBuffer() {}
+  virtual ~TraceBuffer() {}
 
   virtual TraceObject* AddTraceEvent(uint64_t* handle) = 0;
   virtual TraceObject* GetEventByHandle(uint64_t handle) = 0;
@@ -222,10 +219,12 @@ class V8_PLATFORM_EXPORT TraceConfig {
 class V8_PLATFORM_EXPORT TracingController
     : public V8_PLATFORM_NON_EXPORTED_BASE(v8::TracingController) {
  public:
-  // The pointer returned from GetCategoryGroupEnabled() points to a value with
-  // zero or more of the following bits. Used in this class only. The
-  // TRACE_EVENT macros should only use the value as a bool. These values must
-  // be in sync with macro values in TraceEvent.h in Blink.
+  enum Mode { DISABLED = 0, RECORDING_MODE };
+
+  // The pointer returned from GetCategoryGroupEnabledInternal() points to a
+  // value with zero or more of the following bits. Used in this class only.
+  // The TRACE_EVENT macros should only use the value as a bool.
+  // These values must be in sync with macro values in TraceEvent.h in Blink.
   enum CategoryGroupEnabledFlags {
     // Category group enabled for the recording mode.
     ENABLED_FOR_RECORDING = 1 << 0,
@@ -272,6 +271,7 @@ class V8_PLATFORM_EXPORT TracingController
   virtual int64_t CurrentCpuTimestampMicroseconds();
 
  private:
+  const uint8_t* GetCategoryGroupEnabledInternal(const char* category_group);
   void UpdateCategoryGroupEnabledFlag(size_t category_index);
   void UpdateCategoryGroupEnabledFlags();
 
@@ -279,7 +279,7 @@ class V8_PLATFORM_EXPORT TracingController
   std::unique_ptr<TraceConfig> trace_config_;
   std::unique_ptr<base::Mutex> mutex_;
   std::unordered_set<v8::TracingController::TraceStateObserver*> observers_;
-  std::atomic_bool recording_{false};
+  Mode mode_ = DISABLED;
 
   // Disallow copy and assign
   TracingController(const TracingController&) = delete;

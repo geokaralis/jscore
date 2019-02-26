@@ -34,5 +34,8 @@ class MainActivity : AppCompatActivity() {
 ////        // Example of a call to a native method
 ////        sample_text.text = context.evaluateScript("var num = 5; return num;")
         ctx.initV8()
+
+        Log.d("ddddd", ctx.evaluateScript("hello"))
+
     }
 }

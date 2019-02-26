@@ -7,8 +7,6 @@
 
 #include <signal.h>
 
-#include "v8config.h"  // NOLINT(build/include)
-
 namespace v8 {
 /**
  * This function determines whether a memory access violation has been an
@@ -24,8 +22,8 @@ namespace v8 {
  * \param context A pointer to a ucontext_t struct provided to the signal
  * handler.
  */
-V8_EXPORT bool TryHandleWebAssemblyTrapPosix(int sig_code, siginfo_t* info,
-                                             void* context);
+bool TryHandleWebAssemblyTrapPosix(int sig_code, siginfo_t* info,
+                                   void* context);
 
 }  // namespace v8
 #endif  // V8_WASM_TRAP_HANDLER_POSIX_H_

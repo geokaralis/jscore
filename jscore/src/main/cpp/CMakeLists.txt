@@ -28,7 +28,7 @@ set_target_properties(
 
         PROPERTIES IMPORTED_LOCATION
 
-        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_base.a)
+        ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/libv8.a)
 
 add_library(
         libv8-snapshot
@@ -42,7 +42,7 @@ set_target_properties(
 
         PROPERTIES IMPORTED_LOCATION
 
-        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_snapshot.a)
+        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_nosnapshot.a)
 
 add_library(
         libv8-libbase
@@ -72,6 +72,35 @@ set_target_properties(
 
         ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_libplatform.a)
 
+
+add_library(
+        libv8-libicuuc
+
+        STATIC
+
+        IMPORTED)
+
+set_target_properties(
+        libv8-libicuuc
+
+        PROPERTIES IMPORTED_LOCATION
+
+        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libicuuc.a)
+
+add_library(
+        libv8-libinspector
+
+        STATIC
+
+        IMPORTED)
+
+set_target_properties(
+        libv8-libinspector
+
+        PROPERTIES IMPORTED_LOCATION
+
+        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libinspector.a)
+
 find_library( # Sets the name of the path variable.
         log-lib
 
@@ -83,12 +112,6 @@ target_link_libraries( # Specifies the target library.
         jscore-lib
 
         libv8-base
-
-        libv8-snapshot
-
-        libv8-libbase
-
-        libv8-libplatform
 
         # Links the target library to the log library
         # included in the NDK.

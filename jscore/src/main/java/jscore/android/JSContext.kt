@@ -7,7 +7,7 @@ class JSContext {
     }
 
     external fun initV8()
-//    external fun evaluateScript(script: String): String
+    external fun evaluateScript(script: String): String
 
     companion object {
 
