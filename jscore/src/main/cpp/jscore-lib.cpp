@@ -16,7 +16,7 @@ Java_jscore_android_JSContext_evaluate(
 
     std::string test_script = env->GetStringUTFChars(string, nullptr);
 
-    std::string hello = "Hello v8 from C++!\n";
+    std::string hello;
 
     std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
     v8::V8::InitializePlatform(platform.get());
@@ -38,7 +38,7 @@ Java_jscore_android_JSContext_evaluate(
         {
             // Create a string containing the JavaScript source code.
             v8::Local<v8::String> source =
-                    v8::String::NewFromUtf8(isolate, "'Hello' + ', World!'",
+                    v8::String::NewFromUtf8(isolate, test_script.c_str(),
                                             v8::NewStringType::kNormal)
                             .ToLocalChecked();
             // Compile the source code.

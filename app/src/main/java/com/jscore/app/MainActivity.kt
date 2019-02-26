@@ -21,10 +21,10 @@ class MainActivity : AppCompatActivity() {
 //        list.add(2)
 //        list.add(3)
 //
-//        val fileName = "underscore-min.js"
-//        val src = application.assets.open(fileName).bufferedReader().use{
-//            it.readText()
-//        }
+        val fileName = "underscore-min.js"
+        val src = application.assets.open(fileName).bufferedReader().use{
+            it.readText()
+        }
 //
 //        val underscore = Underscore(src)
 //        val contains = underscore.contains(list,3)
@@ -34,6 +34,6 @@ class MainActivity : AppCompatActivity() {
 //        // Example of a call to a native method
 //        sample_text.text = context.evaluateScript("var num = 5; return num;")
 
-        Log.d("MainActivity", ctx.evaluate("hello"))
+        Log.d("MainActivity", ctx.evaluate(src))
     }
 }
