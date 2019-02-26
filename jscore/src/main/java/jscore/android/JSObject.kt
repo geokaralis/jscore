@@ -23,9 +23,7 @@ open class JSObject {
      * and loads it into the temporary short lived context of JSObject.
      */
     fun bind(src: String): JSObject {
-        if (ctx?.evaluated(src)!!) {
-            return this
-        }
+
         //ctx?.evaluateScript(src)
         //Log.d(tag, "Evaluating " + ctx?.evaluateScript(src))
 

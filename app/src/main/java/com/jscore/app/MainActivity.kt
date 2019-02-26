@@ -17,25 +17,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 //        val list: ArrayList<Int> = ArrayList()
-////        list.add(1)
-////        list.add(2)
-////        list.add(3)
-////
-////        val fileName = "underscore-min.js"
-////        val src = application.assets.open(fileName).bufferedReader().use{
-////            it.readText()
-////        }
-////
-////        val underscore = Underscore(src)
-////        val contains = underscore.contains(list,3)
-////
-////        Log.d("Main", contains.toString())
-////
-////        // Example of a call to a native method
-////        sample_text.text = context.evaluateScript("var num = 5; return num;")
-        ctx.initV8()
+//        list.add(1)
+//        list.add(2)
+//        list.add(3)
+//
+//        val fileName = "underscore-min.js"
+//        val src = application.assets.open(fileName).bufferedReader().use{
+//            it.readText()
+//        }
+//
+//        val underscore = Underscore(src)
+//        val contains = underscore.contains(list,3)
+//
+//        Log.d("Main", contains.toString())
+//
+//        // Example of a call to a native method
+//        sample_text.text = context.evaluateScript("var num = 5; return num;")
 
-        Log.d("ddddd", ctx.evaluateScript("hello"))
-
+        Log.d("MainActivity", ctx.evaluate("hello"))
     }
 }
