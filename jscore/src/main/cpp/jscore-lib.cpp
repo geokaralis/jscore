@@ -20,9 +20,9 @@ Java_jscore_android_JSContext_initV8(
 
     // Initialize V8.
     v8::V8::InitializeICU();
-    platform = v8::platform::NewDefaultPlatform();
-    v8::V8::InitializePlatform(&(*platform.get()));
-    v8::V8::Initialize();
+//    platform = v8::platform::NewDefaultPlatform();
+//    v8::V8::InitializePlatform(&(*platform.get()));
+//    v8::V8::Initialize();
 //
 //    // Create a new Isolate and make it the current one.
 //    v8::Isolate::CreateParams create_params;

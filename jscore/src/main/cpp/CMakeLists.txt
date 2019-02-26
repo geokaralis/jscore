@@ -44,6 +44,34 @@ set_target_properties(
 
         ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_snapshot.a)
 
+add_library(
+        libv8-libbase
+
+        STATIC
+
+        IMPORTED)
+
+set_target_properties(
+        libv8-libbase
+
+        PROPERTIES IMPORTED_LOCATION
+
+        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_libbase.a)
+
+add_library(
+        libv8-libplatform
+
+        STATIC
+
+        IMPORTED)
+
+set_target_properties(
+        libv8-libplatform
+
+        PROPERTIES IMPORTED_LOCATION
+
+        ${PROJECT_SOURCE_DIR}/${ANDROID_ABI}/libv8_libplatform.a)
+
 find_library( # Sets the name of the path variable.
         log-lib
 
@@ -57,6 +85,10 @@ target_link_libraries( # Specifies the target library.
         libv8-base
 
         libv8-snapshot
+
+        libv8-libbase
+
+        libv8-libplatform
 
         # Links the target library to the log library
         # included in the NDK.
