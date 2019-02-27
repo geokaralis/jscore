@@ -3,10 +3,8 @@ package com.jscore.app
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import kotlinx.android.synthetic.main.activity_main.*
-import jscore.android.JSContext
-import jscore.android.JSObject
 
+import jscore.android.JSContext
 
 class MainActivity : AppCompatActivity() {
 

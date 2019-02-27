@@ -5,8 +5,15 @@
 #include <jni.h>
 #include <string>
 
+#include "natives_blob.h"
+#include "snapshot_blob.h"
 #include "libplatform/libplatform.h"
 #include "v8.h"
+
+#include <fstream>
+#include <iostream>
+
+#include <android/log.h>
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_jscore_android_JSContext_evaluate(
@@ -17,6 +24,17 @@ Java_jscore_android_JSContext_evaluate(
     std::string test_script = env->GetStringUTFChars(string, nullptr);
 
     std::string hello;
+
+//    adb shell 'mkdir -p /data/local/tmp/v8/bin'
+//
+//    JSCore/jscore/src/main/cpp on  master [!?]
+//    ➜ adb push natives_blob.bin data/local/tmp/v8/bin
+//    natives_blob.bin: 1 file pushed. 3.2 MB/s (11764 bytes in 0.004s)
+//
+//    JSCore/jscore/src/main/cpp on  master [!?]
+//    ➜ adb push snapshot_blob.bin data/local/tmp/v8/bin
+//    snapshot_blob.bin: 1 file pushed. 28.3 MB/s (235148 bytes in 0.008s)
+    v8::V8::InitializeExternalStartupData("/data/local/tmp/v8/bin/natives_blob.bin", "/data/local/tmp/v8/bin/snapshot_blob.bin");
 
     std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
     v8::V8::InitializePlatform(platform.get());
