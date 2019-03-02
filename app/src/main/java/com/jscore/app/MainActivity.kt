@@ -32,6 +32,18 @@ class MainActivity : AppCompatActivity() {
 //        // Example of a call to a native method
 //        sample_text.text = context.evaluateScript("var num = 5; return num;")
 
-        Log.d("MainActivity", ctx.evaluate(src))
+//        Log.d("MainActivity", ctx.evaluate(src))
+
+//        var result = ctx.evaluate("'hello'")
+//        var resul2t = ctx.evaluate("'world'")
+
+        ctx.initV8()
+        ctx.stringFromV8(src)
+        val result = ctx.stringFromV8(""
+                + "var stooges = [{name: 'moe', age: 40}, {name: 'larry', age: 50}, {name: 'curly', age: 60}];"
+                + "var max = _.max(stooges, function(stooge){ return stooge.age; });"
+                + "max.age;")
+
+        Log.d("MainActivity", result)
     }
 }
