@@ -8,10 +8,24 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         jscore-lib.cpp)
-target_include_directories(jscore-lib PRIVATE ${PROJECT_SOURCE_DIR}/include )
 
-add_library(libv8 STATIC IMPORTED)
-set_target_properties(libv8 PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/libv8.a)
+# Include v8 library into the project
+add_library(# Sets the name of the library
+        libv8
+
+        # Sets the library as a static library
+        STATIC
+
+        IMPORTED)
+
+set_target_properties(
+        libv8
+
+        PROPERTIES
+
+        IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/libv8.a
+
+        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/include)
 
 find_library( # Sets the name of the path variable.
         log-lib
@@ -20,6 +34,13 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
+find_library( # Sets the name of the path variable.
+        android-lib
+
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        android )
+
 target_link_libraries( # Specifies the target library.
         jscore-lib
 
@@ -27,4 +48,8 @@ target_link_libraries( # Specifies the target library.
 
         # Links the target library to the log library
         # included in the NDK.
-        ${log-lib})
+        ${log-lib}
+
+        ${android-lib})
+
+
