@@ -1,9 +1,6 @@
 package jscore.android
 
 import android.util.Log
-import jscore.android.parse.ArrayListParse
-import jscore.android.parse.Parser
-import kotlin.text.StringBuilder
 
 open class JSObject {
     private val tag : String = "JSObject"
@@ -33,20 +30,20 @@ open class JSObject {
     @Suppress("UNCHECKED_CAST")
     fun <T> function(name: String, params: ArrayList<out Any>) : T {
 
-        val id = randomId()
-
-        var functionTemplate = "var $id = $name"
-
-        val parser = Parser()
-        var jsParams = parser.parse(params)
-
-        functionTemplate = "$functionTemplate($jsParams)"
-
-
-        //Log.d(tag, ctx?.evaluateScript(functionTemplate))
-        //Log.d(tag, ctx?.evaluateScript(id))
-
-
+//        val id = randomId()
+//
+//        var functionTemplate = "var $id = $name"
+//
+//        val parser = Parser()
+//        var jsParams = parser.parse(params)
+//
+//        functionTemplate = "$functionTemplate($jsParams)"
+//
+//
+//        //Log.d(tag, ctx?.evaluateScript(functionTemplate))
+//        //Log.d(tag, ctx?.evaluateScript(id))
+//
+//
         val list: ArrayList<*> = params[0] as ArrayList<*>
         val index = params[1]
 

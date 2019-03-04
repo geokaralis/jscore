@@ -1,16 +1,22 @@
 package jscore.android
 
-import android.content.res.AssetManager
+class JSContext : AutoCloseable {
 
-class JSContext {
+    init {
+        v8()
+    }
 
     external fun evaluate(script: String): String
-    external fun loadSnapshot(assetManager: AssetManager)
-    external fun initV8()
-    external fun stringFromV8(result: String): String
+    private external fun v8()
+    private external fun dispose()
+
+    override fun close() {
+        dispose()
+    }
 
     companion object {
-        // Used to load the 'native-lib' library on application startup.
+        fun create(): JSContext = JSContext()
+        // Used to load the 'jscore-lib' library on application startup.
         init {
             System.loadLibrary("jscore-lib")
         }
