@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+file(GLOB_RECURSE jscore_src
+        *.h
+        *.c
+        *.cpp)
+
 add_library( # Sets the name of the library.
         jscore-lib
 
@@ -7,7 +12,9 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        jscore-lib.cpp)
+        ${jscore_src})
+
+include_directories( ${CMAKE_SOURCE_DIR} )
 
 # Include v8 library into the project
 add_library(# Sets the name of the library
@@ -23,9 +30,9 @@ set_target_properties(
 
         PROPERTIES
 
-        IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/libv8.a
+        IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/v8/${ANDROID_ABI}/libv8.a
 
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/${ANDROID_ABI}/include)
+        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/libs/v8/${ANDROID_ABI}/include)
 
 find_library( # Sets the name of the path variable.
         log-lib

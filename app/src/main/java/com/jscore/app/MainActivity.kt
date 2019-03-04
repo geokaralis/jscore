@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.util.Log
 
 import jscore.android.JSContext
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private val ctx = JSContext()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,22 +27,16 @@ class MainActivity : AppCompatActivity() {
 //        val contains = underscore.contains(list,3)
 //
 //        Log.d("Main", contains.toString())
-//
-//        // Example of a call to a native method
-//        sample_text.text = context.evaluateScript("var num = 5; return num;")
 
-//        Log.d("MainActivity", ctx.evaluate(src))
+        JSContext.create().use { ctx ->
+            ctx.evaluate(src)
+            val result = ctx.evaluate(""
+                    + "var func = function(greeting){ return greeting + ': ' + this.name };"
+                    + "func = _.bind(func, {name: 'moe'}, 'hi');"
+                    + "func();")
 
-//        var result = ctx.evaluate("'hello'")
-//        var resul2t = ctx.evaluate("'world'")
-
-        ctx.initV8()
-        ctx.stringFromV8(src)
-        val result = ctx.stringFromV8(""
-                + "var stooges = [{name: 'moe', age: 40}, {name: 'larry', age: 50}, {name: 'curly', age: 60}];"
-                + "var max = _.max(stooges, function(stooge){ return stooge.age; });"
-                + "max.age;")
-
-        Log.d("MainActivity", result)
+            Log.d("MainActivity", result)
+            sample_text.text = result
+        }
     }
 }
